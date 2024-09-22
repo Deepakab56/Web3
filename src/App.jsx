@@ -1,33 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
+import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 import './App.css'
+import { createAppKit, useAppKit } from '@reown/appkit/react'
+
+
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
+ 
+
+  const projectId = '3d2f4a67db7c6153807505e32b5b651c'
+
+  
+  // function getBlockchainApiRpcUrl(chainId) {
+  //   return `https://rpc.walletconnect.org/v1/?chainId=eip155:${chainId}&projectId=${projectId}`
+  // }
+  
+  // 3. Set the chains
+  const chains = [
+    {
+      chainId: 1,
+      name: 'Ethereum',
+      currency: 'ETH',
+      explorerUrl: 'https://etherscan.io',
+      rpcUrl: "https://rpc.ankr.com/eth",
+      chainNamespace: 'eip155'
+    },
+    {
+      chainId: 42161,
+      name: 'Arbitrum',
+      currency: 'ETH',
+      explorerUrl: 'https://arbiscan.io',
+      rpcUrl: "https://rpc.ankr.com/arbitrum",
+      chainNamespace: 'eip155'
+    }
+  ]
+  
+  // 3. Create a metadata object - optional
+  const metadata = {
+    name: 'My Website',
+    description: 'My Website description',
+    url: 'https://mywebsite.com', // origin must match your domain & subdomain
+    icons: ['https://avatars.mywebsite.com/']
+  }
+  
+  // 4. Create Ethers Adapter
+  const ethersAdapter = new EthersAdapter()
+  
+  // 5. Create a AppKit instance
+  createAppKit({
+    adapters: [ethersAdapter],
+    networks: chains,
+    projectId,
+    features: {
+      analytics: true // Optional - defaults to your Cloud configuration
+    }
+  })
+
+
+
+  const {open } = useAppKit()
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <button onClick={open}>open</button>
+    
     </>
   )
 }
